@@ -11,6 +11,8 @@ This repository covers the following topics:
 3. [Docker](#docker) - Containerization platform
 4. [Kubernetes](#kubernetes) - Container orchestration
 5. [Jenkins](#jenkins) - CI/CD automation server
+6. [Kafka](#kafka) - Distributed event streaming platform
+7. [Terraform](#terraform) - Infrastructure as Code tool
 
 ## 🎯 What You'll Learn
 
@@ -86,6 +88,36 @@ Master continuous integration and continuous delivery with Jenkins.
 
 📖 **[Start Learning Jenkins →](./Jenkins/README.md)**
 
+### Kafka
+Master distributed event streaming and real-time data pipelines with Apache Kafka.
+
+**Topics Covered:**
+- Kafka architecture and core concepts
+- Producers and Consumers
+- Topics, Partitions, and Consumer Groups
+- Kafka Connect and Kafka Streams
+- Schema Registry and Avro
+- Security and authentication
+- Performance tuning and monitoring
+- Real-world streaming applications
+
+📖 **[Start Learning Kafka →](./Kafka/README.md)**
+
+### Terraform
+Learn Infrastructure as Code and automate cloud resource provisioning with Terraform.
+
+**Topics Covered:**
+- Terraform fundamentals and HCL syntax
+- Providers and Resources
+- Variables, Outputs, and Modules
+- State management and backends
+- Workspaces and environments
+- Best practices for production
+- Multi-cloud deployments
+- Real-world infrastructure examples
+
+📖 **[Start Learning Terraform →](./Terraform/README.md)**
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -97,7 +129,7 @@ Master continuous integration and continuous delivery with Jenkins.
 
 1. **Start with the Basics**: Begin with Git & GitHub if you're new to version control
 2. **Progress Sequentially**: The topics build on each other:
-   - Git/GitHub → GitHub Actions → Docker → Kubernetes → Jenkins
+   - Git/GitHub → GitHub Actions → Docker → Kubernetes → Jenkins → Kafka → Terraform
 3. **Practice Regularly**: Follow the examples and try them on your own
 4. **Experiment**: Modify examples and create your own projects
 5. **Build Projects**: Apply what you learn to real-world scenarios
@@ -127,6 +159,16 @@ Master continuous integration and continuous delivery with Jenkins.
        ▼
 ┌─────────────┐
 │   Jenkins   │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│    Kafka    │
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│  Terraform  │
 └─────────────┘
 ```
 
@@ -190,6 +232,8 @@ choco install kubernetes-cli
 - [Docker Documentation](https://docs.docker.com)
 - [Kubernetes Documentation](https://kubernetes.io/docs)
 - [Jenkins Documentation](https://www.jenkins.io/doc)
+- [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
+- [Terraform Documentation](https://www.terraform.io/docs)
 
 ### Learning Platforms
 - [GitHub Learning Lab](https://lab.github.com)
@@ -247,6 +291,10 @@ Learny/
 │   └── README.md          # Complete Kubernetes guide
 ├── Jenkins/
 │   └── README.md          # Complete Jenkins guide
+├── Kafka/
+│   └── README.md          # Complete Apache Kafka guide
+├── Terraform/
+│   └── README.md          # Complete Terraform guide
 └── README.md              # This file
 ```
 
