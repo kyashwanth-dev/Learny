@@ -971,7 +971,13 @@ Ingress exposes HTTP and HTTPS routes from outside the cluster to services withi
 # Minikube
 minikube addons enable ingress
 
-# Manual installation
+# Manual installation (recommended: review manifest before applying)
+# Download and review the manifest first:
+curl -O https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
+# Review the file, then apply:
+kubectl apply -f deploy.yaml
+
+# Or apply directly (less secure but faster):
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
 ```
 

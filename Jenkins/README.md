@@ -87,9 +87,10 @@ sudo apt update
 # Install Java
 sudo apt install openjdk-11-jdk -y
 
-# Add Jenkins repository key
-curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
-  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+# Add Jenkins repository key (download and verify before adding)
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key -o jenkins-key.asc
+# Review the key file, then install
+sudo cp jenkins-key.asc /usr/share/keyrings/jenkins-keyring.asc
 
 # Add Jenkins repository
 echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
@@ -530,6 +531,7 @@ pipeline {
     stages {
         stage('Login') {
             steps {
+                // Using --password-stdin is the secure way to pass passwords to docker login
                 sh 'echo $DOCKER_CREDS_PSW | docker login -u $DOCKER_CREDS_USR --password-stdin'
             }
         }

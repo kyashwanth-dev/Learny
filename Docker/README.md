@@ -117,8 +117,11 @@ echo \
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 
-# Add user to docker group (optional)
+# Add user to docker group (optional - grants root-equivalent privileges)
+# Note: This allows running Docker without sudo but has security implications
+# Alternative: Use sudo for Docker commands or configure rootless Docker
 sudo usermod -aG docker $USER
+# Log out and back in for group membership to take effect
 ```
 
 ### Verify Installation

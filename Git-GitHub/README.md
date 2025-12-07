@@ -258,12 +258,15 @@ git remote -v
 
 #### Using SSH
 ```bash
-# Generate SSH key
-ssh-keygen -t ed25519 -C "your.email@example.com"
+# Generate SSH key (replace with your actual email)
+ssh-keygen -t ed25519 -C "your.email@example.com" -f ~/.ssh/id_ed25519
 
 # Add SSH key to ssh-agent
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
+
+# Copy public key to clipboard and add to GitHub settings
+cat ~/.ssh/id_ed25519.pub
 
 # Add remote using SSH
 git remote add origin git@github.com:username/repository.git

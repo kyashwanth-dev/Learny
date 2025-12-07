@@ -172,8 +172,11 @@ choco install docker-desktop
 # macOS
 brew install kubectl
 
-# Linux
+# Linux (verify checksum after download)
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# Verify the binary (optional but recommended)
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
 
 # Windows
 choco install kubernetes-cli
@@ -250,5 +253,5 @@ Learny/
 ---
 
 **Version:** 1.0.0  
-**Last Updated:** December 2025  
+**Last Updated:** December 2024  
 **Maintained by:** kyashwanth-dev
