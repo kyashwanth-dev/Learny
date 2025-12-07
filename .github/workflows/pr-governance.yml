@@ -1,0 +1,122 @@
+name: PR Governance
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+jobs:
+  pr-governance:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      ############################################################
+      # ✅ Auto-label PRs
+      ############################################################
+      - name: Add labels to PR
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            needs-review
+
+      ############################################################
+      # ✅ Auto-assign reviewers
+      ############################################################
+      - name: Auto assign reviewers
+        uses: kentaro-m/auto-assign-action@v2.0.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      ############################################################
+      # ✅ Comment on PR
+      ############################################################
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "👋 Thanks for opening this PR! The CI bot is reviewing it now."
+            })
+
+      ############################################################
+      # ✅ Validate PR title format
+      # Example rule: Must start with a capital letter and be 10+ chars
+      ############################################################
+      - name: Validate PR title
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = context.payload.pull_request.title;
+            const regex = /^[A-Z].{9,}$/;
+
+            if (!regex.test(title)) {
+              core.setFailed("❌ Invalid PR title. Must start with a capital letter and be at least 10 characters.");
+            }
+
+      ############################################################
+      # ✅ Block merge if PR is too large
+      # Example rule: More than 500 lines changed = fail
+      ############################################################
+      - name: Block large PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const additions = pr.additions;
+            const deletions = pr.deletions;
+            const total = additions + deletions;
+
+            if (total > 500) {
+              core.setFailed(`❌ PR too large (${total} lines changed). Please split into smaller PRs.`);
+            }
+
+      ############################################################
+      # ✅ Run different steps for draft PRs
+      ############################################################
+      - name: Check if draft
+        id: draft_check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            return { isDraft: context.payload.pull_request.draft };
+
+      - name: Run steps for draft PR
+        if: steps.draft_check.outputs.isDraft == 'true'
+        run: echo "This is a draft PR. Running draft-only checks..."
+
+      - name: Run steps for ready PR
+        if: steps.draft_check.outputs.isDraft == 'false'
+        run: echo "This PR is ready for review. Running full checks..."
+
+      ############################################################
+      # ✅ Auto-close PRs that don’t meet rules
+      # Example rule: Title must contain a Jira ticket like ABC-123
+      ############################################################
+      - name: Auto-close invalid PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = context.payload.pull_request.title;
+            const regex = /[A-Z]{2,5}-\d{1,5}/;
+
+            if (!regex.test(title)) {
+              github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                state: "closed"
+              });
+
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: "❌ PR closed automatically. Title must contain a Jira ticket like `ABC-123`."
+              });
+            }
