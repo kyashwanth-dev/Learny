@@ -7,12 +7,13 @@ Welcome to **Learny** - a comprehensive learning repository designed to help you
 This repository covers the following topics:
 
 1. [Git & GitHub](#git--github) - Version control and collaboration
-2. [GitHub Actions](#github-actions) - CI/CD automation with GitHub
-3. [Docker](#docker) - Containerization platform
-4. [Kubernetes](#kubernetes) - Container orchestration
-5. [Jenkins](#jenkins) - CI/CD automation server
-6. [Kafka](#kafka) - Distributed event streaming platform
-7. [Terraform](#terraform) - Infrastructure as Code tool
+2. [CI/CD Pipelines](#cicd-pipelines) - Complete CI/CD guide with Jenkins and GitHub Actions
+3. [GitHub Actions](#github-actions) - CI/CD automation with GitHub
+4. [Jenkins](#jenkins) - CI/CD automation server
+5. [Docker](#docker) - Containerization platform
+6. [Kubernetes](#kubernetes) - Container orchestration
+7. [Kafka](#kafka) - Distributed event streaming platform
+8. [Terraform](#terraform) - Infrastructure as Code tool
 
 ## 🎯 What You'll Learn
 
@@ -28,6 +29,25 @@ Learn version control fundamentals, Git commands, branching strategies, and GitH
 - Best practices and troubleshooting
 
 📖 **[Start Learning Git & GitHub →](./Git-GitHub/README.md)**
+
+### CI/CD Pipelines
+Master continuous integration and continuous delivery with comprehensive coverage of Jenkins and GitHub Actions.
+
+**Topics Covered:**
+- CI/CD fundamentals and concepts
+- Complete pipeline stages (source, build, test, package, deploy)
+- Jenkins pipelines (Declarative and Scripted)
+- GitHub Actions workflows
+- Jenkins vs GitHub Actions comparison
+- Pipeline design patterns (trunk-based, GitFlow, feature branch)
+- Testing strategies (unit, integration, E2E)
+- Deployment strategies (rolling, blue-green, canary)
+- Security in CI/CD
+- Monitoring and observability
+- Real-world examples
+- Best practices and troubleshooting
+
+📖 **[Start Learning CI/CD Pipelines →](./CI-CD/README.md)**
 
 ### GitHub Actions
 Master CI/CD automation with GitHub's built-in workflow system.
@@ -129,7 +149,7 @@ Learn Infrastructure as Code and automate cloud resource provisioning with Terra
 
 1. **Start with the Basics**: Begin with Git & GitHub if you're new to version control
 2. **Progress Sequentially**: The topics build on each other:
-   - Git/GitHub → GitHub Actions → Docker → Kubernetes → Jenkins → Kafka → Terraform
+   - Git/GitHub → CI/CD Pipelines → Docker → Kubernetes → Kafka → Terraform
 3. **Practice Regularly**: Follow the examples and try them on your own
 4. **Experiment**: Modify examples and create your own projects
 5. **Build Projects**: Apply what you learn to real-world scenarios
@@ -143,7 +163,8 @@ Learn Infrastructure as Code and automate cloud resource provisioning with Terra
        │
        ▼
 ┌─────────────────┐
-│ GitHub Actions  │
+│  CI/CD Pipelines│
+│ (Jenkins + GHA) │
 └──────┬──────────┘
        │
        ▼
@@ -154,11 +175,6 @@ Learn Infrastructure as Code and automate cloud resource provisioning with Terra
        ▼
 ┌─────────────┐
 │ Kubernetes  │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│   Jenkins   │
 └──────┬──────┘
        │
        ▼
@@ -283,14 +299,16 @@ Have questions or suggestions? Feel free to:
 Learny/
 ├── Git-GitHub/
 │   └── README.md          # Complete Git & GitHub guide
+├── CI-CD/
+│   └── README.md          # Complete CI/CD Pipelines guide (Jenkins + GitHub Actions)
 ├── GitHubActions/
 │   └── README.md          # Complete GitHub Actions guide
+├── Jenkins/
+│   └── README.md          # Complete Jenkins guide
 ├── Docker/
 │   └── README.md          # Complete Docker guide
 ├── Kubernetes/
 │   └── README.md          # Complete Kubernetes guide
-├── Jenkins/
-│   └── README.md          # Complete Jenkins guide
 ├── Kafka/
 │   └── README.md          # Complete Apache Kafka guide
 ├── Terraform/
