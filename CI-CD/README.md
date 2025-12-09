@@ -65,9 +65,9 @@ Continuous Deployment goes one step further by automatically deploying every cha
 
 A **pipeline** is an automated sequence of stages that code goes through from commit to deployment.
 
-\`\`\`
+```
 Code Commit → Build → Test → Deploy → Monitor
-\`\`\`
+```
 
 ### Stage
 
@@ -109,19 +109,19 @@ A **trigger** is an event that starts a pipeline (e.g., push, pull request, sche
 - Fetch dependencies metadata
 
 **Example (GitHub Actions):**
-\`\`\`yaml
+```yaml
 - name: Checkout code
   uses: actions/checkout@v3
-\`\`\`
+```
 
 **Example (Jenkins):**
-\`\`\`groovy
+```groovy
 stage('Checkout') {
     steps {
         checkout scm
     }
 }
-\`\`\`
+```
 
 ### 2. Build Stage
 
@@ -134,22 +134,22 @@ stage('Checkout') {
 - Generate documentation
 
 **Example (GitHub Actions):**
-\`\`\`yaml
+```yaml
 - name: Build
   run: |
     npm ci
     npm run build
-\`\`\`
+```
 
 **Example (Jenkins):**
-\`\`\`groovy
+```groovy
 stage('Build') {
     steps {
         sh 'npm ci'
         sh 'npm run build'
     }
 }
-\`\`\`
+```
 
 ### 3. Test Stage
 
@@ -164,16 +164,16 @@ stage('Build') {
 - Security scanning
 
 **Example (GitHub Actions):**
-\`\`\`yaml
+```yaml
 - name: Test
   run: |
     npm run lint
     npm run test:unit
     npm run test:integration
-\`\`\`
+```
 
 **Example (Jenkins):**
-\`\`\`groovy
+```groovy
 stage('Test') {
     parallel {
         stage('Unit Tests') {
@@ -188,7 +188,7 @@ stage('Test') {
         }
     }
 }
-\`\`\`
+```
 
 ### 4. Package Stage
 
@@ -201,15 +201,15 @@ stage('Test') {
 - Tag releases
 
 **Example (GitHub Actions):**
-\`\`\`yaml
+```yaml
 - name: Build Docker Image
   run: |
-    docker build -t myapp:\${{ github.sha }} .
-    docker tag myapp:\${{ github.sha }} myapp:latest
-\`\`\`
+    docker build -t myapp:${{ github.sha }} .
+    docker tag myapp:${{ github.sha }} myapp:latest
+```
 
 **Example (Jenkins):**
-\`\`\`groovy
+```groovy
 stage('Package') {
     steps {
         script {
@@ -217,7 +217,7 @@ stage('Package') {
         }
     }
 }
-\`\`\`
+```
 
 ### 5. Deploy Stage
 
@@ -230,16 +230,16 @@ stage('Package') {
 - Database migrations
 
 **Example (GitHub Actions):**
-\`\`\`yaml
+```yaml
 - name: Deploy to Production
   if: github.ref == 'refs/heads/main'
   run: |
     kubectl apply -f k8s/
-    kubectl set image deployment/myapp myapp=myapp:\${{ github.sha }}
-\`\`\`
+    kubectl set image deployment/myapp myapp=myapp:${{ github.sha }}
+```
 
 **Example (Jenkins):**
-\`\`\`groovy
+```groovy
 stage('Deploy') {
     when {
         branch 'main'
@@ -249,7 +249,7 @@ stage('Deploy') {
         sh "kubectl set image deployment/myapp myapp=myapp:${env.BUILD_NUMBER}"
     }
 }
-\`\`\`
+```
 
 ### 6. Monitor Stage
 
@@ -294,11 +294,11 @@ stage('Deploy') {
 
 ### Jenkins Pipeline Basics
 
-Jenkins pipelines are defined using **Declarative** or **Scripted** syntax in a \`Jenkinsfile\`.
+Jenkins pipelines are defined using **Declarative** or **Scripted** syntax in a `Jenkinsfile`.
 
 ### Declarative Pipeline Structure
 
-\`\`\`groovy
+```groovy
 pipeline {
     agent any
     
@@ -339,11 +339,11 @@ pipeline {
         }
     }
 }
-\`\`\`
+```
 
 ### Complete Jenkins Pipeline Example
 
-\`\`\`groovy
+```groovy
 pipeline {
     agent any
     
@@ -538,11 +538,11 @@ pipeline {
         }
     }
 }
-\`\`\`
+```
 
 ### Jenkins with Docker Agent
 
-\`\`\`groovy
+```groovy
 pipeline {
     agent {
         docker {
@@ -560,11 +560,11 @@ pipeline {
         }
     }
 }
-\`\`\`
+```
 
 ### Jenkins Multi-Branch Pipeline
 
-\`\`\`groovy
+```groovy
 pipeline {
     agent any
     
@@ -597,17 +597,17 @@ pipeline {
         }
     }
 }
-\`\`\`
+```
 
 ## GitHub Actions Workflows
 
 ### GitHub Actions Basics
 
-GitHub Actions workflows are defined in YAML files in the \`.github/workflows\` directory.
+GitHub Actions workflows are defined in YAML files in the `.github/workflows` directory.
 
 ### Basic Workflow Structure
 
-\`\`\`yaml
+```yaml
 name: CI/CD Pipeline
 
 on:
@@ -634,11 +634,11 @@ jobs:
       
       - name: Build
         run: npm run build
-\`\`\`
+```
 
 ### Complete GitHub Actions Workflow Example
 
-\`\`\`yaml
+```yaml
 name: Complete CI/CD Pipeline
 
 on:
@@ -674,7 +674,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: \${{ env.NODE_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       
       - name: Install dependencies
@@ -689,8 +689,8 @@ jobs:
       - name: Run SonarQube scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
-          SONAR_TOKEN: \${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: \${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
   
   # Job 2: Test Suite
   test:
@@ -709,14 +709,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: \${{ env.NODE_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       
       - name: Install dependencies
         run: npm ci
       
-      - name: Run \${{ matrix.test-type }} tests
-        run: npm run test:\${{ matrix.test-type }}
+      - name: Run ${{ matrix.test-type }} tests
+        run: npm run test:${{ matrix.test-type }}
       
       - name: Upload coverage
         if: matrix.test-type == 'unit'
@@ -738,7 +738,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: \${{ env.NODE_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       
       - name: Install dependencies
@@ -762,7 +762,7 @@ jobs:
     if: github.event_name == 'push'
     
     outputs:
-      image-tag: \${{ steps.meta.outputs.tags }}
+      image-tag: ${{ steps.meta.outputs.tags }}
     
     steps:
       - name: Checkout code
@@ -774,14 +774,14 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: \${{ secrets.DOCKER_USERNAME }}
-          password: \${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: \${{ env.DOCKER_REGISTRY }}/\${{ env.IMAGE_NAME }}
+          images: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=sha,prefix={{branch}}-
@@ -792,8 +792,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: \${{ steps.meta.outputs.tags }}
-          labels: \${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
   
@@ -815,13 +815,13 @@ jobs:
         uses: azure/k8s-set-context@v3
         with:
           method: kubeconfig
-          kubeconfig: \${{ secrets.KUBE_CONFIG_STAGING }}
+          kubeconfig: ${{ secrets.KUBE_CONFIG_STAGING }}
       
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/staging/
           kubectl set image deployment/myapp \\
-            myapp=\${{ needs.docker.outputs.image-tag }} \\
+            myapp=${{ needs.docker.outputs.image-tag }} \\
             -n staging
           kubectl rollout status deployment/myapp -n staging
       
@@ -846,13 +846,13 @@ jobs:
         uses: azure/k8s-set-context@v3
         with:
           method: kubeconfig
-          kubeconfig: \${{ secrets.KUBE_CONFIG_PRODUCTION }}
+          kubeconfig: ${{ secrets.KUBE_CONFIG_PRODUCTION }}
       
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/production/
           kubectl set image deployment/myapp \\
-            myapp=\${{ needs.docker.outputs.image-tag }} \\
+            myapp=${{ needs.docker.outputs.image-tag }} \\
             -n production
           kubectl rollout status deployment/myapp -n production
       
@@ -863,10 +863,10 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: \${{ github.ref }}
-          release_name: Release \${{ github.ref }}
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
   
@@ -881,21 +881,21 @@ jobs:
       - name: Notify Slack
         uses: 8398a7/action-slack@v3
         with:
-          status: \${{ job.status }}
+          status: ${{ job.status }}
           text: 'Deployment completed'
-          webhook_url: \${{ secrets.SLACK_WEBHOOK }}
-\`\`\`
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+```
 
 ### GitHub Actions with Matrix Strategy
 
-\`\`\`yaml
+```yaml
 name: Multi-Platform Build
 
 on: [push]
 
 jobs:
   build:
-    runs-on: \${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     
     strategy:
       fail-fast: false
@@ -909,21 +909,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Setup Node.js \${{ matrix.node-version }}
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
-          node-version: \${{ matrix.node-version }}
+          node-version: ${{ matrix.node-version }}
       
       - name: Install and test
         run: |
           npm ci
           npm test
-\`\`\`
+```
 
 ### GitHub Actions Reusable Workflows
 
-**\`.github/workflows/reusable-build.yml\`:**
-\`\`\`yaml
+**`.github/workflows/reusable-build.yml`:**
+```yaml
 name: Reusable Build Workflow
 
 on:
@@ -945,18 +945,18 @@ jobs:
       
       - uses: actions/setup-node@v3
         with:
-          node-version: \${{ inputs.node-version }}
+          node-version: ${{ inputs.node-version }}
       
       - name: Build
         env:
-          NPM_TOKEN: \${{ secrets.npm-token }}
+          NPM_TOKEN: ${{ secrets.npm-token }}
         run: |
           npm ci
           npm run build
-\`\`\`
+```
 
 **Using the reusable workflow:**
-\`\`\`yaml
+```yaml
 name: Main Pipeline
 
 on: [push]
@@ -967,8 +967,8 @@ jobs:
     with:
       node-version: '18'
     secrets:
-      npm-token: \${{ secrets.NPM_TOKEN }}
-\`\`\`
+      npm-token: ${{ secrets.NPM_TOKEN }}
+```
 
 ## Jenkins vs GitHub Actions
 
@@ -990,7 +990,7 @@ jobs:
 ### Syntax Comparison
 
 **Jenkins (Declarative):**
-\`\`\`groovy
+```groovy
 pipeline {
     agent any
     stages {
@@ -1001,10 +1001,10 @@ pipeline {
         }
     }
 }
-\`\`\`
+```
 
 **GitHub Actions:**
-\`\`\`yaml
+```yaml
 name: Build
 on: [push]
 jobs:
@@ -1013,7 +1013,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: npm run build
-\`\`\`
+```
 
 ### When to Use Each
 
@@ -1034,7 +1034,7 @@ jobs:
 ### Migration from Jenkins to GitHub Actions
 
 **Jenkins Jenkinsfile:**
-\`\`\`groovy
+```groovy
 pipeline {
     agent any
     stages {
@@ -1051,10 +1051,10 @@ pipeline {
         }
     }
 }
-\`\`\`
+```
 
 **Equivalent GitHub Actions:**
-\`\`\`yaml
+```yaml
 name: CI
 on: [push]
 jobs:
@@ -1065,7 +1065,7 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm test
-\`\`\`
+```
 
 ## Pipeline Design Patterns
 
@@ -1073,7 +1073,7 @@ jobs:
 
 **Strategy:** All developers work on a single branch (main/trunk) with short-lived feature branches.
 
-\`\`\`yaml
+```yaml
 # GitHub Actions
 name: Trunk-Based CI
 on:
@@ -1090,13 +1090,13 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
-\`\`\`
+```
 
 ### 2. GitFlow
 
 **Strategy:** Structured branching model with main, develop, feature, release, and hotfix branches.
 
-\`\`\`groovy
+```groovy
 // Jenkins
 pipeline {
     agent any
@@ -1121,13 +1121,13 @@ pipeline {
         }
     }
 }
-\`\`\`
+```
 
 ### 3. Feature Branch Workflow
 
 **Strategy:** Each feature is developed in a dedicated branch and merged via pull request.
 
-\`\`\`yaml
+```yaml
 # GitHub Actions
 name: Feature Branch CI
 on:
@@ -1143,13 +1143,13 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
-\`\`\`
+```
 
 ### 4. Monorepo Pipeline
 
 **Strategy:** Multiple projects in a single repository with selective builds.
 
-\`\`\`yaml
+```yaml
 # GitHub Actions
 name: Monorepo CI
 on:
@@ -1161,7 +1161,7 @@ jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      packages: \${{ steps.filter.outputs.changes }}
+      packages: ${{ steps.filter.outputs.changes }}
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -1178,16 +1178,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: \${{ fromJSON(needs.changes.outputs.packages) }}
+        package: ${{ fromJSON(needs.changes.outputs.packages) }}
     steps:
       - uses: actions/checkout@v3
       - run: npm ci
-      - run: npm run build --workspace=packages/\${{ matrix.package }}
-\`\`\`
+      - run: npm run build --workspace=packages/${{ matrix.package }}
+```
 
 ### 5. Blue-Green Deployment Pipeline
 
-\`\`\`yaml
+```yaml
 # GitHub Actions
 name: Blue-Green Deployment
 
@@ -1217,13 +1217,13 @@ jobs:
       
       - name: Cleanup Blue Environment
         run: kubectl delete -f k8s/blue/
-\`\`\`
+```
 
 ## Testing Strategies
 
 ### Test Pyramid
 
-\`\`\`
+```
         /\\
        /  \\
       / E2E \\
@@ -1234,21 +1234,21 @@ jobs:
  /               \\
 /   Unit Tests   \\
 /__________________\\
-\`\`\`
+```
 
 ### 1. Unit Tests
 
 **Purpose:** Test individual components in isolation
 
-\`\`\`yaml
+```yaml
 # GitHub Actions
 - name: Unit Tests
   run: |
     npm run test:unit -- --coverage
     npm run test:unit -- --watch=false
-\`\`\`
+```
 
-\`\`\`groovy
+```groovy
 // Jenkins
 stage('Unit Tests') {
     steps {
@@ -1261,26 +1261,26 @@ stage('Unit Tests') {
         ])
     }
 }
-\`\`\`
+```
 
 ### 2. Integration Tests
 
 **Purpose:** Test interaction between components
 
-\`\`\`yaml
+```yaml
 # GitHub Actions with Docker Compose
 - name: Integration Tests
   run: |
     docker-compose up -d
     npm run test:integration
     docker-compose down
-\`\`\`
+```
 
 ### 3. End-to-End Tests
 
 **Purpose:** Test complete user workflows
 
-\`\`\`yaml
+```yaml
 # GitHub Actions with Playwright
 - name: E2E Tests
   run: |
@@ -1293,30 +1293,30 @@ stage('Unit Tests') {
   with:
     name: playwright-report
     path: playwright-report/
-\`\`\`
+```
 
 ### 4. Performance Tests
 
-\`\`\`groovy
+```groovy
 // Jenkins with k6
 stage('Performance Tests') {
     steps {
         sh 'k6 run --vus 10 --duration 30s load-test.js'
     }
 }
-\`\`\`
+```
 
 ### 5. Security Tests
 
-\`\`\`yaml
+```yaml
 # GitHub Actions with Snyk
 - name: Security Scan
   uses: snyk/actions/node@master
   env:
-    SNYK_TOKEN: \${{ secrets.SNYK_TOKEN }}
+    SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   with:
     args: --severity-threshold=high
-\`\`\`
+```
 
 ## Deployment Strategies
 
@@ -1324,21 +1324,21 @@ stage('Performance Tests') {
 
 Gradually replace old version with new version.
 
-\`\`\`yaml
+```yaml
 # Kubernetes Rolling Update
 - name: Rolling Deployment
   run: |
     kubectl set image deployment/myapp \\
-      myapp=myapp:\${{ github.sha }} \\
+      myapp=myapp:${{ github.sha }} \\
       --record
     kubectl rollout status deployment/myapp
-\`\`\`
+```
 
 ### 2. Blue-Green Deployment
 
 Two identical environments, switch traffic between them.
 
-\`\`\`yaml
+```yaml
 - name: Blue-Green Deploy
   run: |
     # Deploy to green
@@ -1350,13 +1350,13 @@ Two identical environments, switch traffic between them.
     # Switch traffic
     kubectl patch service myapp \\
       -p '{"spec":{"selector":{"version":"green"}}}'
-\`\`\`
+```
 
 ### 3. Canary Deployment
 
 Gradually roll out to a subset of users.
 
-\`\`\`yaml
+```yaml
 - name: Canary Deployment
   run: |
     # Deploy canary with 10% traffic
@@ -1373,26 +1373,26 @@ Gradually roll out to a subset of users.
     
     # Full rollout
     kubectl apply -f k8s/production.yaml
-\`\`\`
+```
 
 ### 4. Feature Flags
 
 Deploy code but control feature availability.
 
-\`\`\`yaml
+```yaml
 - name: Deploy with Feature Flags
   env:
-    FEATURE_NEW_UI: \${{ secrets.FEATURE_NEW_UI }}
+    FEATURE_NEW_UI: ${{ secrets.FEATURE_NEW_UI }}
   run: |
     kubectl set env deployment/myapp \\
       FEATURE_NEW_UI=$FEATURE_NEW_UI
-\`\`\`
+```
 
 ### 5. A/B Testing
 
 Test two versions simultaneously with different user groups.
 
-\`\`\`yaml
+```yaml
 - name: A/B Deployment
   run: |
     # Deploy version A (50% traffic)
@@ -1402,50 +1402,50 @@ Test two versions simultaneously with different user groups.
     kubectl apply -f k8s/version-b.yaml
     
     # Monitor metrics and choose winner
-\`\`\`
+```
 
 ## Security in CI/CD
 
 ### 1. Secrets Management
 
 **GitHub Actions:**
-\`\`\`yaml
+```yaml
 jobs:
   deploy:
     steps:
       - name: Use secrets
         env:
-          API_KEY: \${{ secrets.API_KEY }}
-          DB_PASSWORD: \${{ secrets.DB_PASSWORD }}
+          API_KEY: ${{ secrets.API_KEY }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: ./deploy.sh
-\`\`\`
+```
 
 **Jenkins:**
-\`\`\`groovy
+```groovy
 environment {
     API_KEY = credentials('api-key-id')
     DB_PASSWORD = credentials('db-password-id')
 }
-\`\`\`
+```
 
 ### 2. Dependency Scanning
 
-\`\`\`yaml
+```yaml
 # GitHub Actions with npm audit
 - name: Security Audit
   run: |
     npm audit --audit-level=moderate
     npm audit fix
-\`\`\`
+```
 
 ### 3. Container Scanning
 
-\`\`\`yaml
+```yaml
 # Trivy container scanner
 - name: Scan Docker Image
   uses: aquasecurity/trivy-action@master
   with:
-    image-ref: myapp:\${{ github.sha }}
+    image-ref: myapp:${{ github.sha }}
     format: 'sarif'
     output: 'trivy-results.sarif'
 
@@ -1453,11 +1453,11 @@ environment {
   uses: github/codeql-action/upload-sarif@v2
   with:
     sarif_file: 'trivy-results.sarif'
-\`\`\`
+```
 
 ### 4. Code Scanning
 
-\`\`\`yaml
+```yaml
 # CodeQL Analysis
 - name: Initialize CodeQL
   uses: github/codeql-action/init@v2
@@ -1466,11 +1466,11 @@ environment {
 
 - name: Perform CodeQL Analysis
   uses: github/codeql-action/analyze@v2
-\`\`\`
+```
 
 ### 5. SAST (Static Application Security Testing)
 
-\`\`\`groovy
+```groovy
 // Jenkins with SonarQube
 stage('Security Scan') {
     steps {
@@ -1479,25 +1479,25 @@ stage('Security Scan') {
         }
     }
 }
-\`\`\`
+```
 
 ### 6. Least Privilege Principle
 
-\`\`\`yaml
+```yaml
 # GitHub Actions with minimal permissions
 permissions:
   contents: read
   pull-requests: write
   issues: write
-\`\`\`
+```
 
 ### 7. Signed Commits
 
-\`\`\`yaml
+```yaml
 - name: Verify Signed Commits
   run: |
     git verify-commit HEAD
-\`\`\`
+```
 
 ## Monitoring and Observability
 
@@ -1513,7 +1513,7 @@ permissions:
 
 ### 2. Application Monitoring
 
-\`\`\`yaml
+```yaml
 # Deploy with monitoring
 - name: Deploy and Monitor
   run: |
@@ -1527,21 +1527,21 @@ permissions:
     
     # Check metrics
     curl -f https://myapp.com/metrics || exit 1
-\`\`\`
+```
 
 ### 3. Log Aggregation
 
-\`\`\`yaml
+```yaml
 - name: Configure Logging
   run: |
     kubectl apply -f k8s/fluentd.yaml
     kubectl apply -f k8s/elasticsearch.yaml
     kubectl apply -f k8s/kibana.yaml
-\`\`\`
+```
 
 ### 4. Alerting
 
-\`\`\`groovy
+```groovy
 // Jenkins with Slack notifications
 post {
     failure {
@@ -1557,23 +1557,23 @@ post {
         )
     }
 }
-\`\`\`
+```
 
 ### 5. Distributed Tracing
 
-\`\`\`yaml
+```yaml
 - name: Deploy with OpenTelemetry
   env:
-    OTEL_EXPORTER_OTLP_ENDPOINT: \${{ secrets.OTEL_ENDPOINT }}
+    OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.OTEL_ENDPOINT }}
   run: |
     kubectl apply -f k8s/otel-collector.yaml
-\`\`\`
+```
 
 ## Real-World Examples
 
 ### Example 1: Microservices CI/CD
 
-\`\`\`yaml
+```yaml
 name: Microservices Pipeline
 
 on:
@@ -1586,7 +1586,7 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
-      services: \${{ steps.filter.outputs.changes }}
+      services: ${{ steps.filter.outputs.changes }}
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -1605,30 +1605,30 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: \${{ fromJSON(needs.detect-changes.outputs.services) }}
+        service: ${{ fromJSON(needs.detect-changes.outputs.services) }}
     
     steps:
       - uses: actions/checkout@v3
       
-      - name: Build \${{ matrix.service }}
+      - name: Build ${{ matrix.service }}
         run: |
-          cd services/\${{ matrix.service }}
-          docker build -t \${{ matrix.service }}:\${{ github.sha }} .
+          cd services/${{ matrix.service }}
+          docker build -t ${{ matrix.service }}:${{ github.sha }} .
       
-      - name: Test \${{ matrix.service }}
+      - name: Test ${{ matrix.service }}
         run: |
-          cd services/\${{ matrix.service }}
+          cd services/${{ matrix.service }}
           npm test
       
-      - name: Deploy \${{ matrix.service }}
+      - name: Deploy ${{ matrix.service }}
         run: |
-          kubectl set image deployment/\${{ matrix.service }} \\
-            \${{ matrix.service }}=\${{ matrix.service }}:\${{ github.sha }}
-\`\`\`
+          kubectl set image deployment/${{ matrix.service }} \\
+            ${{ matrix.service }}=${{ matrix.service }}:${{ github.sha }}
+```
 
 ### Example 2: Infrastructure as Code Pipeline
 
-\`\`\`yaml
+```yaml
 name: Terraform CI/CD
 
 on:
@@ -1665,21 +1665,21 @@ jobs:
         run: terraform plan -out=tfplan
         working-directory: terraform
         env:
-          AWS_ACCESS_KEY_ID: \${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: \${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve tfplan
         working-directory: terraform
         env:
-          AWS_ACCESS_KEY_ID: \${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: \${{ secrets.AWS_SECRET_ACCESS_KEY }}
-\`\`\`
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+```
 
 ### Example 3: Mobile App CI/CD
 
-\`\`\`groovy
+```groovy
 // Jenkins Pipeline for React Native
 pipeline {
     agent any
@@ -1748,11 +1748,11 @@ pipeline {
         }
     }
 }
-\`\`\`
+```
 
 ### Example 4: Database Migration Pipeline
 
-\`\`\`yaml
+```yaml
 name: Database Migration
 
 on:
@@ -1778,42 +1778,42 @@ jobs:
       
       - name: Backup Database
         env:
-          DATABASE_URL: \${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           pg_dump $DATABASE_URL > backup-$(date +%Y%m%d-%H%M%S).sql
       
       - name: Run Migrations
         env:
-          DATABASE_URL: \${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           npm run migrate:up
       
       - name: Verify Migration
         env:
-          DATABASE_URL: \${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           npm run migrate:verify
       
       - name: Rollback on Failure
         if: failure()
         env:
-          DATABASE_URL: \${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           npm run migrate:down
-\`\`\`
+```
 
 ## Best Practices
 
 ### 1. Version Control Everything
 
-\`\`\`yaml
+```yaml
 # Store pipeline configuration in Git
 .github/workflows/
 ├── ci.yml
 ├── cd.yml
 ├── security.yml
 └── cleanup.yml
-\`\`\`
+```
 
 ### 2. Keep Pipelines Fast
 
@@ -1823,44 +1823,44 @@ jobs:
 - Use incremental builds
 - Optimize Docker layers
 
-\`\`\`yaml
+```yaml
 - uses: actions/cache@v3
   with:
     path: ~/.npm
-    key: \${{ runner.os }}-node-\${{ hashFiles('**/package-lock.json') }}
-\`\`\`
+    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+```
 
 ### 3. Fail Fast
 
-\`\`\`yaml
+```yaml
 strategy:
   fail-fast: true
   matrix:
     node-version: [16, 18, 20]
-\`\`\`
+```
 
 ### 4. Make Pipelines Idempotent
 
 Pipelines should produce same result when run multiple times.
 
-\`\`\`yaml
+```yaml
 - name: Deploy (Idempotent)
   run: |
     kubectl apply -f k8s/  # apply is idempotent
-\`\`\`
+```
 
 ### 5. Use Infrastructure as Code
 
-\`\`\`yaml
+```yaml
 - name: Provision Infrastructure
   run: |
     terraform init
     terraform apply -auto-approve
-\`\`\`
+```
 
 ### 6. Implement Proper Error Handling
 
-\`\`\`groovy
+```groovy
 // Jenkins
 try {
     sh 'npm test'
@@ -1871,33 +1871,33 @@ try {
     // Cleanup always runs
     cleanWs()
 }
-\`\`\`
+```
 
 ### 7. Tag and Version Everything
 
-\`\`\`yaml
+```yaml
 - name: Tag Release
   run: |
-    git tag v\${{ github.run_number }}
-    docker tag myapp:latest myapp:v\${{ github.run_number }}
-\`\`\`
+    git tag v${{ github.run_number }}
+    docker tag myapp:latest myapp:v${{ github.run_number }}
+```
 
 ### 8. Monitor Pipeline Health
 
-\`\`\`yaml
+```yaml
 - name: Report Metrics
   run: |
     curl -X POST https://metrics.example.com/api/builds \\
       -d '{
-        "duration": "\${{ job.duration }}",
-        "status": "\${{ job.status }}",
-        "pipeline": "\${{ github.workflow }}"
+        "duration": "${{ job.duration }}",
+        "status": "${{ job.status }}",
+        "pipeline": "${{ github.workflow }}"
       }'
-\`\`\`
+```
 
 ### 9. Document Your Pipelines
 
-\`\`\`yaml
+```yaml
 name: CI Pipeline
 
 # This pipeline runs on every push to main and:
@@ -1909,24 +1909,24 @@ name: CI Pipeline
 on:
   push:
     branches: [main]
-\`\`\`
+```
 
 ### 10. Use Secrets Securely
 
 **Never:**
-\`\`\`yaml
+```yaml
 # DON'T DO THIS
 - run: echo "API_KEY=secret123" >> .env
-\`\`\`
+```
 
 **Always:**
-\`\`\`yaml
+```yaml
 # DO THIS
 - name: Configure secrets
   env:
-    API_KEY: \${{ secrets.API_KEY }}
+    API_KEY: ${{ secrets.API_KEY }}
   run: ./configure.sh
-\`\`\`
+```
 
 ## Troubleshooting
 
@@ -1937,7 +1937,7 @@ on:
 **Symptoms:** Pipeline passes sometimes, fails others
 
 **Solutions:**
-\`\`\`yaml
+```yaml
 # Add retries
 - uses: nick-invision/retry@v2
   with:
@@ -1950,19 +1950,19 @@ on:
   run: |
     set -x  # Enable debug mode
     npm test
-\`\`\`
+```
 
 #### Issue 2: Slow Pipeline
 
 **Symptoms:** Pipeline takes too long to complete
 
 **Solutions:**
-\`\`\`yaml
+```yaml
 # Use caching
 - uses: actions/cache@v3
   with:
     path: node_modules
-    key: \${{ runner.os }}-deps-\${{ hashFiles('package-lock.json') }}
+    key: ${{ runner.os }}-deps-${{ hashFiles('package-lock.json') }}
 
 # Parallelize jobs
 jobs:
@@ -1971,14 +1971,14 @@ jobs:
   test-integration:
     runs-on: ubuntu-latest
   # Run simultaneously
-\`\`\`
+```
 
 #### Issue 3: Deployment Failures
 
 **Symptoms:** Deployment step fails
 
 **Solutions:**
-\`\`\`yaml
+```yaml
 # Add health checks
 - name: Deploy and verify
   run: |
@@ -1991,14 +1991,14 @@ jobs:
   if: failure()
   run: |
     kubectl rollout undo deployment/myapp
-\`\`\`
+```
 
 #### Issue 4: Test Flakiness
 
 **Symptoms:** Tests fail randomly
 
 **Solutions:**
-\`\`\`yaml
+```yaml
 # Increase timeouts
 - name: Run tests with retries
   run: |
@@ -2008,18 +2008,18 @@ jobs:
 - name: Run tests serially
   run: |
     npm test -- --runInBand
-\`\`\`
+```
 
 #### Issue 5: Secret Exposure
 
 **Symptoms:** Secrets visible in logs
 
 **Solutions:**
-\`\`\`yaml
+```yaml
 # Use secret masking
 - name: Use secret safely
   env:
-    SECRET_KEY: \${{ secrets.SECRET_KEY }}
+    SECRET_KEY: ${{ secrets.SECRET_KEY }}
   run: |
     # GitHub automatically masks secrets in logs
     echo "Secret is set"
@@ -2028,27 +2028,27 @@ jobs:
 # Use temporary files
 - name: Configure with secret
   env:
-    SECRET: \${{ secrets.SECRET }}
+    SECRET: ${{ secrets.SECRET }}
   run: |
     echo "$SECRET" > /tmp/secret
     chmod 600 /tmp/secret
     ./configure.sh /tmp/secret
     rm /tmp/secret
-\`\`\`
+```
 
 ### Debugging Tips
 
 #### Enable Debug Logging
 
 **GitHub Actions:**
-\`\`\`yaml
+```yaml
 # Set repository secrets:
 # ACTIONS_STEP_DEBUG: true
 # ACTIONS_RUNNER_DEBUG: true
-\`\`\`
+```
 
 **Jenkins:**
-\`\`\`groovy
+```groovy
 pipeline {
     options {
         timestamps()
@@ -2062,25 +2062,25 @@ pipeline {
         }
     }
 }
-\`\`\`
+```
 
 #### Check Pipeline Syntax
 
 **GitHub Actions:**
-\`\`\`bash
+```bash
 # Install actionlint
 brew install actionlint
 
 # Validate workflow
 actionlint .github/workflows/*.yml
-\`\`\`
+```
 
 **Jenkins:**
-\`\`\`bash
+```bash
 # Use Jenkins Pipeline validator
 curl -X POST -F "jenkinsfile=<Jenkinsfile" \\
   http://jenkins-url/pipeline-model-converter/validate
-\`\`\`
+```
 
 ## Resources
 
