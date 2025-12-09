@@ -1330,7 +1330,7 @@ Gradually replace old version with new version.
   run: |
     kubectl set image deployment/myapp \\
       myapp=myapp:${{ github.sha }} \\
-      --record
+     
     kubectl rollout status deployment/myapp
 ```
 
